@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1530" />
+  <title>Reserva tu sesión</title>
+  <meta name="description" content="Elige tu sesión, completa tus datos y reserva tu día y hora." />
+  <style>
+    :root {
+      --navy: #09152f;
+      --navy-2: #101f43;
+      --gold: #d9b45b;
+      --ivory: #f5f0e6;
+      --white: #ffffff;
+      --ink: #15203a;
+      --muted: #6d7484;
+      --line: rgba(9, 21, 47, .12);
+      --shadow: 0 28px 70px rgba(3, 10, 28, .20);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 8%, rgba(217, 180, 91, .18), transparent 30%),
+        radial-gradient(circle at 92% 18%, rgba(255, 255, 255, .09), transparent 26%),
+        var(--navy);
+      min-height: 100vh;
+    }
+
+    button,
+    input {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: clamp(18px, 3vw, 42px)
+    }
+
+    .shell {
+      width: min(1180px, 100%);
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 28px;
+      align-items: stretch
+    }
+
+    .hero,
+    .booking {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow)
+    }
+
+    .hero {
+      min-height: 720px;
+      padding: clamp(34px, 5vw, 72px);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background:
+        linear-gradient(150deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .015)),
+        linear-gradient(150deg, #132751 0%, #0a1733 58%, #071126 100%);
+      border: 1px solid rgba(255, 255, 255, .12);
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero:before,
+    .hero:after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(217, 180, 91, .28);
+      border-radius: 50%;
+      z-index: -1
+    }
+
+    .hero:before {
+      width: 340px;
+      height: 340px;
+      right: -140px;
+      top: -120px
+    }
+
+    .hero:after {
+      width: 520px;
+      height: 520px;
+      left: -290px;
+      bottom: -310px
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: 12px;
+      font-weight: 800;
+      color: #ead291
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 5px rgba(217, 180, 91, .12)
+    }
+
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(48px, 7.2vw, 96px);
+      line-height: .93;
+      letter-spacing: -.055em;
+      margin: 24px 0 26px;
+      max-width: 820px;
+      font-weight: 500
+    }
+
+    .hero p {
+      max-width: 630px;
+      font-size: clamp(17px, 2vw, 22px);
+      line-height: 1.6;
+      color: rgba(255, 255, 255, .78);
+      margin: 0
+    }
+
+    .hero-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-end;
+      margin-top: 58px
+    }
+
+    .trust {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px
+    }
+
+    .pill {
+      border: 1px solid rgba(255, 255, 255, .13);
+      background: rgba(255, 255, 255, .055);
+      backdrop-filter: blur(14px);
+      padding: 10px 13px;
+      border-radius: 999px;
+      color: rgba(255, 255, 255, .82);
+      font-size: 13px
+    }
+
+    .mark {
+      font-family: Georgia, serif;
+      color: var(--gold);
+      font-size: 52px;
+      line-height: 1
+    }
+
+    .booking {
+      background: var(--ivory);
+      padding: clamp(24px, 3.3vw, 44px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center
+    }
+
+    .booking h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 500;
+      font-size: clamp(34px, 4.5vw, 54px);
+      letter-spacing: -.04em;
+      line-height: 1;
+      margin: 0 0 8px;
+      color: var(--navy)
+    }
+
+    .sub {
+      color: var(--muted);
+      line-height: 1.55;
+      margin: 0 0 28px
+    }
+
+    .service-grid {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 26px
+    }
+
+    .service {
+      position: relative;
+      display: block
+    }
+
+    .service input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none
+    }
+
+    .service-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .58);
+      transition: .2s ease;
+      align-items: center
+    }
+
+    .service-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(9, 21, 47, .28)
+    }
+
+    .service input:checked+.service-card {
+      border-color: var(--gold);
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(9, 21, 47, .08), inset 0 0 0 1px var(--gold)
+    }
+
+    .service-name {
+      font-weight: 850;
+      color: var(--navy);
+      margin-bottom: 4px
+    }
+
+    .service-meta {
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    .price {
+      font-family: Georgia, serif;
+      font-size: 28px;
+      color: var(--navy);
+      white-space: nowrap
+    }
+
+    .price small {
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--muted)
+    }
+
+    .fields {
+      display: grid;
+      gap: 13px
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 0 0 7px
+    }
+
+    .field input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 14px;
+      padding: 15px 16px;
+      color: var(--ink);
+      outline: none;
+      transition: .2s ease
+    }
+
+    .field input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(217, 180, 91, .16)
+    }
+
+    .cta {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      background: var(--navy);
+      color: #fff;
+      padding: 17px 18px;
+      font-weight: 900;
+      margin-top: 19px;
+      box-shadow: 0 14px 30px rgba(9, 21, 47, .18);
+      transition: .2s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 9px
+    }
+
+    .cta:hover {
+      transform: translateY(-1px);
+      background: #122552
+    }
+
+    .cta:active {
+      transform: translateY(0)
+    }
+
+    .fineprint {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.5;
+      margin: 13px 6px 0
+    }
+
+    .notice {
+      display: none;
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.45
+    }
+
+    .notice.show {
+      display: block
+    }
+
+    .notice.error {
+      background: #fff0ef;
+      color: #861c19;
+      border: 1px solid #f0c5c2
+    }
+
+    .notice.ok {
+      background: #eff8f1;
+      color: #1f6d38;
+      border: 1px solid #c5e4cd
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 8, 20, .78);
+      backdrop-filter: blur(12px);
+      display: none;
+      place-items: center;
+      padding: 20px;
+      z-index: 99
+    }
+
+    .modal.open {
+      display: grid
+    }
+
+    .modal-card {
+      width: min(980px, 100%);
+      height: min(820px, 92vh);
+      background: #fff;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 28px 90px rgba(0, 0, 0, .38);
+      display: grid;
+      grid-template-rows: auto 1fr
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px 14px 20px;
+      border-bottom: 1px solid #ececec;
+      gap: 16px
+    }
+
+    .modal-title {
+      font-weight: 900;
+      color: var(--navy)
+    }
+
+    .close {
+      border: none;
+      background: #f2f3f5;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      font-size: 22px;
+      color: var(--navy)
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff
+    }
+
+    @media(max-width:900px) {
+      .page {
+        padding: 0;
+        background: var(--ivory)
+      }
+
+      .shell {
+        display: block;
+        width: 100%
+      }
+
+      .hero,
+      .booking {
+        border-radius: 0;
+        box-shadow: none
+      }
+
+      .hero {
+        min-height: 540px;
+        padding: 48px 24px 38px
+      }
+
+      .booking {
+        padding: 34px 20px 48px
+      }
+
+      h1 {
+        max-width: 650px
+      }
+
+      .hero-bottom {
+        margin-top: 40px
+      }
+    }
+
+    @media(max-width:520px) {
+      .hero {
+        min-height: 500px
+      }
+
+      .hero-bottom {
+        align-items: center
+      }
+
+      .mark {
+        display: none
+      }
+
+      .service-card {
+        padding: 16px
+      }
+
+      .price {
+        font-size: 24px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <section class="shell">
+      <article class="hero">
+        <div>
+          <span class="eyebrow"><span class="dot"></span> Reserva privada</span>
+          <h1>Tu próximo paso empieza con una conversación.</h1>
+          <p>Elige la sesión que mejor encaja contigo, completa tus datos y reserva directamente el día y la hora
+            disponibles.</p>
+        </div>
+        <div class="hero-bottom">
+          <div class="trust">
+            <span class="pill">Reserva inmediata</span>
+            <span class="pill">Confirmación por email</span>
+            <span class="pill">Calendario en tiempo real</span>
+          </div>
+          <div class="mark">✦</div>
+        </div>
+      </article>
+
+      <article class="booking">
+        <h2>Reserva tu sesión</h2>
+        <p class="sub">Selecciona una opción y después elige tu día y hora.</p>
+
+        <form id="bookingForm" novalidate>
+          <div class="service-grid">
+            <label class="service">
+              <input type="radio" name="service" value="Sesión inicial · 20 min · 19€" checked>
+              <span class="service-card">
+                <span>
+                  <div class="service-name">Sesión inicial</div>
+                  <div class="service-meta">20 minutos · primera toma de contacto</div>
+                </span>
+                <span class="price">19<small>€</small></span>
+              </span>
+            </label>
+            <label class="service">
+              <input type="radio" name="service" value="Sesión completa · 60 min · 49€">
+              <span class="service-card">
+                <span>
+                  <div class="service-name">Sesión completa</div>
+                  <div class="service-meta">60 minutos · trabajo en profundidad</div>
+                </span>
+                <span class="price">49<small>€</small></span>
+              </span>
+            </label>
+            <label class="service">
+              <input type="radio" name="service" value="Sesión intensiva · 90 min · 79€">
+              <span class="service-card">
+                <span>
+                  <div class="service-name">Sesión intensiva</div>
+                  <div class="service-meta">90 minutos · acompañamiento ampliado</div>
+                </span>
+                <span class="price">79<small>€</small></span>
+              </span>
+            </label>
+          </div>
+
+          <div class="fields">
+            <div class="field">
+              <label for="name">Tu nombre</label>
+              <input id="name" name="name" autocomplete="name" placeholder="Nombre y apellidos" required>
+            </div>
+            <div class="field">
+              <label for="phone">Teléfono</label>
+              <input id="phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+34 600 000 000" required>
+            </div>
+            <div class="field">
+              <label for="email">Correo electrónico</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="tu@correo.com" required>
+            </div>
+          </div>
+
+          <button class="cta" type="submit"><span>📅</span> Elige tu día y reserva ahora</button>
+          <div id="notice" class="notice"></div>
+          <p class="fineprint">Al continuar podrás seleccionar una cita disponible en el calendario. Tus parámetros UTM
+            se conservan para analítica.</p>
+        </form>
+      </article>
+    </section>
+  </main>
+
+  <div class="modal" id="calendarModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="calendarTitle">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="calendarTitle">Elige tu día y hora</div>
+          <div id="chosenService" style="font-size:12px;color:#6d7484;margin-top:2px"></div>
+        </div>
+        <button class="close" type="button" id="closeModal" aria-label="Cerrar">×</button>
+      </div>
+      <iframe id="calendarFrame" title="Calendario de reservas" loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <script>
+    const CONFIG = {
+      // Pega aquí tu URL de Google Calendar Appointment Schedule.
+      // Ejemplo: https://calendar.google.com/calendar/appointments/schedules/XXXXXXXX
+      bookingUrl: "https://calendar.app.google/x9Yrv1NVa9ZQ8B7r9",
+
+      // Opcional: webhook propio / Make / Zapier para guardar el lead ANTES de abrir el calendario.
+      // Déjalo vacío si no quieres usarlo.
+      leadWebhookUrl: ""
+    };
+
+    const form = document.getElementById('bookingForm');
+    const modal = document.getElementById('calendarModal');
+    const frame = document.getElementById('calendarFrame');
+    const closeModal = document.getElementById('closeModal');
+    const notice = document.getElementById('notice');
+    const chosenService = document.getElementById('chosenService');
+
+    function showNotice(message, type = 'error') {
+      notice.textContent = message;
+      notice.className = `notice show ${type}`;
+    }
+
+    function getUtm() {
+      const params = new URLSearchParams(location.search);
+      const utm = {};
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'].forEach(k => {
+        if (params.get(k)) utm[k] = params.get(k);
+      });
+      return utm;
+    }
+
+    async function saveLead(payload) {
+      if (!CONFIG.leadWebhookUrl) return;
+      try {
+        await fetch(CONFIG.leadWebhookUrl, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload),
+          mode: 'cors'
+        });
+      } catch (err) {
+        console.warn('No se pudo registrar el lead:', err);
+      }
+    }
+
+    function openCalendar(service) {
+      chosenService.textContent = service;
+      frame.src = CONFIG.bookingUrl;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCalendar() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      frame.src = '';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      notice.className = 'notice';
+
+      if (!form.reportValidity()) return;
+
+      if (!CONFIG.bookingUrl) {
+        showNotice('La landing está lista. Solo falta pegar tu enlace de Google Calendar en CONFIG.bookingUrl.');
+        return;
+      }
+
+      const data = new FormData(form);
+      const payload = {
+        service: data.get('service'),
+        name: data.get('name').trim(),
+        phone: data.get('phone').trim(),
+        email: data.get('email').trim(),
+        utm: getUtm(),
+        page: location.href,
+        createdAt: new Date().toISOString()
+      };
+
+      sessionStorage.setItem('bookingLead', JSON.stringify(payload));
+      await saveLead(payload);
+      openCalendar(payload.service);
+    });
+
+    closeModal.addEventListener('click', closeCalendar);
+    modal.addEventListener('click', e => {if (e.target === modal) closeCalendar();});
+    document.addEventListener('keydown', e => {if (e.key === 'Escape' && modal.classList.contains('open')) closeCalendar();});
+  </script>
+</body>
+
+</html>
